@@ -85,12 +85,8 @@ class TreasuryModel:
 
         return total, avg
 
-    def get_expenses_by_company(self):
-        df = self.get_records(type = 'E')
-        return df.groupby('company')['amount'].sum().reset_index()
-
-    def get_income_by_company(self):
-        df = self.get_records(type = 'I')
+    def get_data_by_company(self,type):
+        df = self.get_records(type=type)
         return df.groupby('company')['amount'].sum().reset_index()
 
     def get_monthly_balance(self):
