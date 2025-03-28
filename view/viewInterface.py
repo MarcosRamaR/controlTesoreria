@@ -11,7 +11,7 @@ class MainInterface:
         self.label = ctk.CTkLabel(self.root, text="TesControl", font=("Arial", 40))
         self.label.pack(padx=20, pady=20)
 
-        # Change window after 2 secs
+        # Change window after 1.5 secs
         self.root.after(1500, self.change_window)
 
     def change_window(self):
