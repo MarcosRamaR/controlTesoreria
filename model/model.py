@@ -89,6 +89,10 @@ class TreasuryModel:
         df = self.get_records(type = 'E')
         return df.groupby('company')['amount'].sum().reset_index()
 
+    def get_income_by_company(self):
+        df = self.get_records(type = 'I')
+        return df.groupby('company')['amount'].sum().reset_index()
+
     def get_monthly_balance(self):
         df = pd.read_csv(self.treasury_file)
         df['payment_date'] = pd.to_datetime(df['payment_date'])
