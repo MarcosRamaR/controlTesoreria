@@ -103,6 +103,7 @@ class ExpensesView:
         entry_amount =self.entry_amount.get()
 
         self.controller.add_new_data(entry_invoice,entry_payment,entry_company,entry_descr,entry_amount,"E")
+        self.load_expenses()
 
     def button_delete_expense(self):
         print("button delete pressed")
