@@ -33,7 +33,7 @@ class ExpensesView:
 
         #Scrollable frame for the expenses
         self.scrollable_frame = ctk.CTkScrollableFrame(container, height=300)
-        self.scrollable_frame.pack(fill="both", expand=True, pady=(0, 10))
+        self.scrollable_frame.pack(fill="both", expand=True, pady=(0, 5))
 
         self.selected_row = None
         self.selected_data = None
@@ -43,12 +43,19 @@ class ExpensesView:
 
         self.load_expenses()
 
+        #Container and button for delete
+        container_delete_button = ctk.CTkFrame(self.frame, fg_color="transparent", height=1)
+        container_delete_button.pack(fill="both", expand=True)
+
+        delete_expense = ctk.CTkButton(master=container_delete_button, text="Delete Expense", command=self.button_delete_expense)
+        delete_expense.pack(side="right", padx=10)
+
         #Frame to new expense form
-        container_new_expense = ctk.CTkFrame(self.frame, fg_color="transparent")
-        container_new_expense.pack(fill="both", expand=True, padx=10, pady=0)
+        container_new_expense = ctk.CTkFrame(self.frame, fg_color="#2c2f36")
+        container_new_expense.pack(fill="both", expand=True, padx=10, pady=(0, 5))
 
         label_new_expense = ctk.CTkLabel(container_new_expense, text="New Expense", font=("Arial", 25))
-        label_new_expense.pack()
+        label_new_expense.pack(pady=30)
 
         frame_new_expense = ctk.CTkFrame(container_new_expense,fg_color = "transparent")
         frame_new_expense.pack(fill="both", expand=True)
@@ -83,12 +90,15 @@ class ExpensesView:
         entry_invoice = ctk.CTkEntry(frame_new_expense)
         entry_invoice.grid(row=1, column=4, padx=10, sticky="w")
 
-        save_expense = ctk.CTkButton(master=frame_new_expense, text="Save Expense", command=self.button_event)
+        save_expense = ctk.CTkButton(master=frame_new_expense, text="Save Expense", command=self.button_new_expense)
         save_expense.grid(row=1, column=5)
 
 
-    def button_event(self):
-        print("button pressed")
+    def button_new_expense(self):
+        print("button new pressed")
+
+    def button_delete_expense(self):
+        print("button delete pressed")
 
     def load_expenses(self):
         """Load and display the expenses"""
