@@ -63,32 +63,32 @@ class ExpensesView:
         label_invoice = ctk.CTkLabel(frame_new_expense, text = "Invoice Date", font=("Arial", 11))
         label_invoice.grid(row=0, column = 0,padx=10)
 
-        entry_invoice = ctk.CTkEntry(frame_new_expense)
-        entry_invoice.grid(row=1, column=0, padx=10, sticky="w")
+        self.entry_invoice = ctk.CTkEntry(frame_new_expense)
+        self.entry_invoice.grid(row=1, column=0, padx=10, sticky="w")
 
-        label_invoice = ctk.CTkLabel(frame_new_expense, text = "Payment Date", font=("Arial", 11))
-        label_invoice.grid(row=0, column = 1,padx=10)
+        label_payment = ctk.CTkLabel(frame_new_expense, text = "Payment Date", font=("Arial", 11))
+        label_payment.grid(row=0, column = 1,padx=10)
 
-        entry_invoice = ctk.CTkEntry(frame_new_expense)
-        entry_invoice.grid(row=1, column=1, padx=10, sticky="w")
+        self.entry_payment = ctk.CTkEntry(frame_new_expense)
+        self.entry_payment.grid(row=1, column=1, padx=10, sticky="w")
 
-        label_invoice = ctk.CTkLabel(frame_new_expense, text = "Company", font=("Arial", 11))
-        label_invoice.grid(row=0, column = 2,padx=10)
+        label_company = ctk.CTkLabel(frame_new_expense, text = "Company", font=("Arial", 11))
+        label_company .grid(row=0, column = 2,padx=10)
 
-        entry_invoice = ctk.CTkEntry(frame_new_expense)
-        entry_invoice.grid(row=1, column=2, padx=10, sticky="w")
+        self.entry_company  = ctk.CTkEntry(frame_new_expense)
+        self.entry_company .grid(row=1, column=2, padx=10, sticky="w")
 
-        label_invoice = ctk.CTkLabel(frame_new_expense, text = "Description", font=("Arial", 11))
-        label_invoice.grid(row=0, column = 3,padx=10)
+        label_descr = ctk.CTkLabel(frame_new_expense, text = "Description", font=("Arial", 11))
+        label_descr.grid(row=0, column = 3,padx=10)
 
-        entry_invoice = ctk.CTkEntry(frame_new_expense)
-        entry_invoice.grid(row=1, column=3, padx=10, sticky="w")
+        self.entry_descr = ctk.CTkEntry(frame_new_expense)
+        self.entry_descr.grid(row=1, column=3, padx=10, sticky="w")
 
-        label_invoice = ctk.CTkLabel(frame_new_expense, text = "Amount", font=("Arial", 11))
-        label_invoice.grid(row=0, column = 4,padx=10)
+        label_amount = ctk.CTkLabel(frame_new_expense, text = "Amount", font=("Arial", 11))
+        label_amount.grid(row=0, column = 4,padx=10)
 
-        entry_invoice = ctk.CTkEntry(frame_new_expense)
-        entry_invoice.grid(row=1, column=4, padx=10, sticky="w")
+        self.entry_amount = ctk.CTkEntry(frame_new_expense)
+        self.entry_amount.grid(row=1, column=4, padx=10, sticky="w")
 
         save_expense = ctk.CTkButton(master=frame_new_expense, text="Save Expense", command=self.button_new_expense)
         save_expense.grid(row=1, column=5)
@@ -96,6 +96,13 @@ class ExpensesView:
 
     def button_new_expense(self):
         print("button new pressed")
+        entry_invoice= self.entry_invoice.get()
+        entry_payment = self.entry_payment.get()
+        entry_company= self.entry_company.get()
+        entry_descr = self.entry_descr.get()
+        entry_amount =self.entry_amount.get()
+
+        self.controller.add_new_data(entry_invoice,entry_payment,entry_company,entry_descr,entry_amount,"E")
 
     def button_delete_expense(self):
         print("button delete pressed")
