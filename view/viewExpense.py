@@ -66,17 +66,26 @@ class ExpensesView:
             for i in range(5):
                 row_frame.grid_columnconfigure(i, weight=3 if i == 3 else 1, uniform="col")
 
-            #Add the data to the row
-            ctk.CTkLabel(row_frame, text=row['invoice_date'].strftime('%Y-%m-%d'), anchor="w").grid(row=0, column=0, padx=5, sticky="w")
-            ctk.CTkLabel(row_frame, text=row['payment_date'].strftime('%Y-%m-%d'), anchor="w").grid(row=0, column=1, padx=5, sticky="w")
-            ctk.CTkLabel(row_frame, text=row['company'], anchor="w").grid(row=0, column=2, padx=5, sticky="w")
-            ctk.CTkLabel(row_frame, text=row['description'], anchor="w",wraplength=300).grid(row=0, column=3, padx=5, sticky="w")
-            ctk.CTkLabel(row_frame, text=f"€ {row['amount']:.2f}", anchor="w").grid(row=0, column=4, padx=5, sticky="w")
-
-            #Bind click and hover events
-            row_frame.bind("<Enter>", lambda e, f=row_frame: f.configure(fg_color=self.hover_color))
-            row_frame.bind("<Leave>", lambda e, f=row_frame:f.configure(fg_color=self.selected_color if f == self.selected_row else self.normal_color))
+            # Bind click event to the entire row_frame
             row_frame.bind("<Button-1>", lambda e, r=row, f=row_frame: self.on_row_click(r, f))
+            row_frame.bind("<Enter>", lambda e, f=row_frame: f.configure(fg_color=self.hover_color))
+            row_frame.bind("<Leave>", lambda e, f=row_frame: f.configure(fg_color=self.selected_color if f == self.selected_row else self.normal_color))
+
+            # Add the data to the row
+            for col, text in enumerate([
+                row['invoice_date'].strftime('%Y-%m-%d'),
+                row['payment_date'].strftime('%Y-%m-%d'),
+                row['company'],
+                row['description'],
+                f"€ {row['amount']:.2f}"
+            ]):
+                label = ctk.CTkLabel(row_frame, text=text, anchor="w", wraplength=300 if col == 3 else 0)
+                label.grid(row=0, column=col, padx=5, sticky="w")
+
+                # Bind click event to each label to ensure clicks on text are registered
+                label.bind("<Button-1>", lambda e, r=row, f=row_frame: self.on_row_click(r, f))
+                label.bind("<Enter>", lambda e, f=row_frame: f.configure(fg_color=self.hover_color))
+                label.bind("<Leave>", lambda e, f=row_frame:f.configure(fg_color=self.selected_color if f == self.selected_row else self.normal_color))
 
 
     def on_row_click(self, row, row_frame):
