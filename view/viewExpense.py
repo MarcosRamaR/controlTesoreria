@@ -71,7 +71,7 @@ class ExpensesView:
             ctk.CTkLabel(row_frame, text=row['payment_date'].strftime('%Y-%m-%d'), anchor="w").grid(row=0, column=1, padx=5, sticky="w")
             ctk.CTkLabel(row_frame, text=row['company'], anchor="w").grid(row=0, column=2, padx=5, sticky="w")
             ctk.CTkLabel(row_frame, text=row['description'], anchor="w",wraplength=300).grid(row=0, column=3, padx=5, sticky="w")
-            ctk.CTkLabel(row_frame, text=f"${row['amount']:.2f}", anchor="w").grid(row=0, column=4, padx=5, sticky="w")
+            ctk.CTkLabel(row_frame, text=f"€ {row['amount']:.2f}", anchor="w").grid(row=0, column=4, padx=5, sticky="w")
 
             #Bind click and hover events
             row_frame.bind("<Enter>", lambda e, f=row_frame: f.configure(fg_color=self.hover_color))
