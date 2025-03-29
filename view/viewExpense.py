@@ -6,6 +6,8 @@ from functools import partial
 class ExpensesView:
     """Class for display the Expenses """
 
+
+
     def __init__(self,frame):
         self.frame = frame
         self.controller = TreasuryController() #Controller for data operations
@@ -41,6 +43,52 @@ class ExpensesView:
 
         self.load_expenses()
 
+        #Frame to new expense form
+        container_new_expense = ctk.CTkFrame(self.frame, fg_color="transparent")
+        container_new_expense.pack(fill="both", expand=True, padx=10, pady=0)
+
+        label_new_expense = ctk.CTkLabel(container_new_expense, text="New Expense", font=("Arial", 25))
+        label_new_expense.pack()
+
+        frame_new_expense = ctk.CTkFrame(container_new_expense,fg_color = "transparent")
+        frame_new_expense.pack(fill="both", expand=True)
+
+        label_invoice = ctk.CTkLabel(frame_new_expense, text = "Invoice Date", font=("Arial", 11))
+        label_invoice.grid(row=0, column = 0,padx=10)
+
+        entry_invoice = ctk.CTkEntry(frame_new_expense)
+        entry_invoice.grid(row=1, column=0, padx=10, sticky="w")
+
+        label_invoice = ctk.CTkLabel(frame_new_expense, text = "Payment Date", font=("Arial", 11))
+        label_invoice.grid(row=0, column = 1,padx=10)
+
+        entry_invoice = ctk.CTkEntry(frame_new_expense)
+        entry_invoice.grid(row=1, column=1, padx=10, sticky="w")
+
+        label_invoice = ctk.CTkLabel(frame_new_expense, text = "Company", font=("Arial", 11))
+        label_invoice.grid(row=0, column = 2,padx=10)
+
+        entry_invoice = ctk.CTkEntry(frame_new_expense)
+        entry_invoice.grid(row=1, column=2, padx=10, sticky="w")
+
+        label_invoice = ctk.CTkLabel(frame_new_expense, text = "Description", font=("Arial", 11))
+        label_invoice.grid(row=0, column = 3,padx=10)
+
+        entry_invoice = ctk.CTkEntry(frame_new_expense)
+        entry_invoice.grid(row=1, column=3, padx=10, sticky="w")
+
+        label_invoice = ctk.CTkLabel(frame_new_expense, text = "Amount", font=("Arial", 11))
+        label_invoice.grid(row=0, column = 4,padx=10)
+
+        entry_invoice = ctk.CTkEntry(frame_new_expense)
+        entry_invoice.grid(row=1, column=4, padx=10, sticky="w")
+
+        save_expense = ctk.CTkButton(master=frame_new_expense, text="Save Expense", command=self.button_event)
+        save_expense.grid(row=1, column=5)
+
+
+    def button_event(self):
+        print("button pressed")
 
     def load_expenses(self):
         """Load and display the expenses"""
