@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from viewInterface import MainInterface
+from view.viewInterface import MainInterface
 
 ctk.set_appearance_mode("dark")
 # Create main window
@@ -9,7 +9,7 @@ root = ctk.CTk()
 interface = MainInterface(root)
 
 # Configure size and title
-root.geometry("600x400")
+root.geometry("1024x768")
 root.title("Treasury control")
 
 # Start app

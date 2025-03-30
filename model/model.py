@@ -1,3 +1,5 @@
+from tkinter.constants import FALSE
+
 import pandas as pd
 import os
 from datetime import datetime
@@ -99,3 +101,34 @@ class TreasuryModel:
             'month': monthly_data.index.astype(str),
             'balance': monthly_data['balance'].values
         })
+
+    def delete_data(self,invoice_date,payment_date,company,description,amount,type):
+        """Delete data from csv based on match the fields"""
+
+        df = pd.read_csv(self.treasury_file)
+
+        #Make sure the dates are in the same format as the DataFrame
+        invoice_date = pd.to_datetime(invoice_date)
+        payment_date = pd.to_datetime(payment_date)
+
+        #Create a mask to match the record (the data will be true or false on this mask)
+
+        mask=(
+            (pd.to_datetime(df['invoice_date']) == invoice_date) &
+            (pd.to_datetime(df['payment_date']) == payment_date) &
+            (df['company'] == company) &
+            (df['description'] == description) &
+            (df['amount'] == amount) &
+            (df['type'] == type)
+        )
+
+        #Delete the matching row saving the elements without true
+        df = df[~mask]
+
+        #Save the updated DataFrame to the .csv
+        df.to_csv(self.treasury_file,index=False)
+
+        #This return true if at least 1 row is deleted
+        return sum(mask)>0
+
+

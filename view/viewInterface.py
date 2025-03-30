@@ -1,4 +1,5 @@
 import customtkinter as ctk
+from view.viewExpense import ExpensesView
 
 class MainInterface:
     def __init__(self, root):
@@ -35,8 +36,7 @@ class MainInterface:
         label_p1 = ctk.CTkLabel(tabview.tab("Summary"), text="Summary of the statistics", font=("Arial", 20))
         label_p1.pack(padx=20, pady=20)
 
-        label_p2 = ctk.CTkLabel(tabview.tab("Expenses"), text="Expenses control", font=("Arial", 20))
-        label_p2.pack(padx=20, pady=20)
+        ExpensesView(tabview.tab("Expenses"))
 
         label_p3 = ctk.CTkLabel(tabview.tab("Income"), text="Income control", font=("Arial", 20))
         label_p3.pack(padx=20, pady=20)
