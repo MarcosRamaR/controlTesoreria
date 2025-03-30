@@ -108,8 +108,8 @@ class TreasuryModel:
         df = pd.read_csv(self.treasury_file)
 
         #Make sure the dates are in the same format as the DataFrame
-        invoice_date = pd.to_datetime(df['invoice_date'])
-        payment_date = pd.to_datetime(df['payment_date'])
+        invoice_date = pd.to_datetime(invoice_date)
+        payment_date = pd.to_datetime(payment_date)
 
         #Create a mask to match the record (the data will be true or false on this mask)
 
@@ -117,6 +117,7 @@ class TreasuryModel:
             (pd.to_datetime(df['invoice_date']) == invoice_date) &
             (pd.to_datetime(df['payment_date']) == payment_date) &
             (df['company'] == company) &
+            (df['description'] == description) &
             (df['amount'] == amount) &
             (df['type'] == type)
         )

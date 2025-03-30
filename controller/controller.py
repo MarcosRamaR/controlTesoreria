@@ -22,3 +22,6 @@ class TreasuryController:
 
     def get_monthly_balance(self):
         return self.model.get_monthly_balance()
+
+    def delete_data(self, invoice_date, payment_date,company,description,amount,type):
+        return self.model.delete_data(invoice_date, payment_date,company,description,amount,type)
