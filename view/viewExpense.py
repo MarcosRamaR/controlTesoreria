@@ -107,6 +107,25 @@ class ExpensesView:
 
     def button_delete_expense(self):
         print("button delete pressed")
+        if self.selected_row is not None:
+            invoice_date = self.selected_data['invoice_date']
+            payment_date = self.selected_data['payment_date']
+            company = self.selected_data['company']
+            description = self.selected_data['description']
+            amount = self.selected_data['amount']
+
+            deleted = self.controller.delete_data(invoice_date,payment_date,company,description,amount,'E')
+
+            if deleted:
+                self.load_expenses()
+                self.selected_row = None
+                print("Expense successfully deleted")
+            else:
+                print("Deleted error")
+        else:
+            print("No expense selected")
+
+
 
     def load_expenses(self):
         """Load and display the expenses"""

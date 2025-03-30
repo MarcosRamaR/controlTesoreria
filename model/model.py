@@ -128,4 +128,7 @@ class TreasuryModel:
         #Save the updated DataFrame to the .csv
         df.to_csv(self.treasury_file,index=False)
 
+        #This return true if at least 1 row is deleted
+        return sum(mask)>0
+
 
