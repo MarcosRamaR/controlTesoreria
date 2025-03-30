@@ -45,7 +45,7 @@ class IncomesView:
         container_delete_button = ctk.CTkFrame(self.frame, fg_color="transparent", height=1)
         container_delete_button.pack(fill="both", expand=True)
 
-        delete_income = ctk.CTkButton(master=container_delete_button, text="Delete Expense", command=self.button_delete_income)
+        delete_income = ctk.CTkButton(master=container_delete_button, text="Delete Income", command=self.button_delete_income)
         delete_income.pack(side="right", padx=10)
 
         #Frame to new expense form
