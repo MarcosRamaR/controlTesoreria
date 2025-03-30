@@ -40,6 +40,3 @@ class MainInterface:
 
         ExpensesView(tabview.tab("Expenses"))
         IncomesView(tabview.tab("Income"))
-
-        label_p3 = ctk.CTkLabel(tabview.tab("Income"), text="Income control", font=("Arial", 20))
-        label_p3.pack(padx=20, pady=20)
