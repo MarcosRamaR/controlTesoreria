@@ -45,14 +45,14 @@ class IncomesView:
         container_delete_button = ctk.CTkFrame(self.frame, fg_color="transparent", height=1)
         container_delete_button.pack(fill="both", expand=True)
 
-        delete_income = ctk.CTkButton(master=container_delete_button, text="Delete Expense", command=self.button_delete_income)
+        delete_income = ctk.CTkButton(master=container_delete_button, text="Delete Income", command=self.button_delete_income)
         delete_income.pack(side="right", padx=10)
 
         #Frame to new expense form
         container_new_income = ctk.CTkFrame(self.frame, fg_color="#2c2f36")
         container_new_income.pack(fill="both", expand=True, padx=10, pady=(0, 5))
 
-        label_new_income = ctk.CTkLabel(container_new_income, text="New Expense", font=("Arial", 25))
+        label_new_income = ctk.CTkLabel(container_new_income, text="New Income", font=("Arial", 25))
         label_new_income.pack(pady=30)
 
         frame_new_income = ctk.CTkFrame(container_new_income,fg_color = "transparent")
@@ -88,7 +88,7 @@ class IncomesView:
         self.entry_amount = ctk.CTkEntry(frame_new_income)
         self.entry_amount.grid(row=1, column=4, padx=10, sticky="w")
 
-        save_income = ctk.CTkButton(master=frame_new_income, text="Save Expense", command=self.button_new_income)
+        save_income = ctk.CTkButton(master=frame_new_income, text="Save Income", command=self.button_new_income)
         save_income.grid(row=1, column=5)
 
 
