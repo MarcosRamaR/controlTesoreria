@@ -105,7 +105,21 @@ class SummaryView:
         ax.legend(facecolor='#2b2b2b', edgecolor='white', labelcolor='white')
         ax.grid(axis='y', linestyle="--", alpha=0.3)
 
-        plt.tight_layout() #Avoid overlaps
+        def add_values(bars):
+            """Add values to the bars"""
+            for bar in bars:
+                height = bar.get_height()
+                if height > 0:
+                    ax.text(bar.get_x() + bar.get_width() / 2., height,
+                            f'€{height:}',
+                            ha='center', va='bottom', fontsize=9)
+
+        if 'E' in monthly_data.columns:
+            add_values(ax.containers[0])
+        if 'I' in monthly_data.columns:
+            add_values(ax.containers[1 if 'E' in monthly_data.columns else 0])
+
+        plt.tight_layout()
 
         #Add the graph to tkinter on a canvas
         canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Quaterly Balance"))
