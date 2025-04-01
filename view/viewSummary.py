@@ -196,11 +196,23 @@ class SummaryView:
         fig, ax = plt.subplots(figsize = (10,5))
         fig.patch.set_facecolor('#2b2b2b')
 
-        colors = plt.cm.Paired.colors
+        #colors = plt.cm.Paired.colors
+        colors = [
+            '#a51717','#171ca6', '#7ba617','#a65a17','#1aa617','#a68e17','#5ca617','#17a65e','#1787a6','#4417a6','#a617a1',
+            '#a1a617',  '#a6175c', '#6f17a6', '#1749a6', '#17a690', '#a67617', '#a63417'
+        ]
 
-        ax.pie(expenses_company['amount'],labels=expenses_company['company'],startangle=90, colors=colors,textprops={'color':'white'})
+        #zip() combines two list inot ordered pairs
+        labels = [f"{company}(€{amount:,.2f})" for company, amount in zip(expenses_company['company'], expenses_company['amount'])]
+
+        wedges, texts, autotexts = ax.pie(expenses_company['amount'],autopct='%1.1f%%',startangle=90, colors=colors,textprops={'color':'white'},pctdistance=1.1)
+
+        #bbox_to_anchor is to separate the legend
+        ax.legend(wedges, labels, facecolor='#2b2b2b', edgecolor='white', labelcolor='white', loc="lower right", bbox_to_anchor=(1.5,0.5))
 
         ax.set_title('Expenses by Company', color = "white")
+
+
         plt.tight_layout()
 
         canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Expenses"))
