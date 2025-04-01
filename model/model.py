@@ -153,6 +153,7 @@ class TreasuryModel:
         all_dates = pd.date_range(start=today, end = next_30days)#Generate all dates between start and end
         daily_data = daily_data.reindex(all_dates,fill_value=0) #Make sure all dates have data
 
+
         return daily_data
 
 

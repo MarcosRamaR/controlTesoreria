@@ -6,9 +6,10 @@ from functools import partial
 class IncomesView:
     """Class for display the Expenses """
 
-    def __init__(self,frame):
+    def __init__(self,frame,update_callback=None):
         self.frame = frame
         self.controller = TreasuryController() #Controller for data operations
+        self.update_callback = update_callback
 
         label = ctk.CTkLabel(self.frame, text="Income Control", font=("Arial", 20))
         label.pack(pady=(10,5))
@@ -103,6 +104,9 @@ class IncomesView:
         self.controller.add_new_data(entry_invoice,entry_payment,entry_company,entry_descr,entry_amount,"I")
         self.load_incomes()
 
+        if self.update_callback:
+            self.update_callback()
+
     def button_delete_income(self):
         print("button delete pressed")
         if self.selected_row is not None:
@@ -118,6 +122,8 @@ class IncomesView:
                 self.load_incomes()
                 self.selected_row = None
                 print("Income successfully deleted")
+                if self.update_callback:
+                    self.update_callback()
             else:
                 print("Deleted error")
         else:

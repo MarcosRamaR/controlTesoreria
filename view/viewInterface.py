@@ -8,6 +8,7 @@ class MainInterface:
     def __init__(self, root):
         self.root = root
         self.label = None
+        self.summary_view = None
         self.setup_ui()
 
     def setup_ui(self):
@@ -36,6 +37,10 @@ class MainInterface:
         tabview.add("Income")
 
         # Add differente information
-        SummaryView(tabview.tab("Summary"))
-        ExpensesView(tabview.tab("Expenses"))
-        IncomesView(tabview.tab("Income"))
+        self.summary_view = SummaryView(tabview.tab("Summary"))
+        ExpensesView(tabview.tab("Expenses"), self.update_summary) #we need the update function
+        IncomesView(tabview.tab("Income"),self.update_summary)
+
+    def update_summary(self):
+        if self.summary_view:
+            self.summary_view.update_chart()

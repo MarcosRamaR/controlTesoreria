@@ -8,9 +8,10 @@ class ExpensesView:
 
 
 
-    def __init__(self,frame):
+    def __init__(self,frame,update_callback = None):
         self.frame = frame
         self.controller = TreasuryController() #Controller for data operations
+        self.update_callback = update_callback #Save the callback
 
         label = ctk.CTkLabel(self.frame, text="Expenses Control", font=("Arial", 20))
         label.pack(pady=(10,5))
@@ -105,6 +106,9 @@ class ExpensesView:
         self.controller.add_new_data(entry_invoice,entry_payment,entry_company,entry_descr,entry_amount,"E")
         self.load_expenses()
 
+        if self.update_callback:
+            self.update_callback()
+
     def button_delete_expense(self):
         print("button delete pressed")
         if self.selected_row is not None:
@@ -120,6 +124,8 @@ class ExpensesView:
                 self.load_expenses()
                 self.selected_row = None
                 print("Expense successfully deleted")
+                if self.update_callback:
+                    self.update_callback()
             else:
                 print("Deleted error")
         else:

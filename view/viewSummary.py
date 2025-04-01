@@ -24,9 +24,21 @@ class SummaryView:
 
         self.create_chart()
 
+    def update_chart(self):
+        #Clear widgets on tabs
+        for tab_name in ["30 days Balance", "Quaterly Balance", "Yearly Balance", "Treasury Balance", "Expenses"]:
+            for widget in self.tabview_summary.tab(tab_name).winfo_children():
+                widget.destroy()
+        self.create_chart()
 
     def create_chart(self):
         daily_data=self.controller.get_next_30days_balance()
+
+        first_day = daily_data.index[0] #First range day
+        last_day = daily_data.index[-1] #Last range day
+        days_data = daily_data[daily_data['I'] != 0 | (daily_data['E'] != 0)].index #Days with data
+        #Dates we will show (first day, last day and days with data)
+        dates_to_show = days_data.union([first_day,last_day]).unique()
 
         #Set the graph
         fig,ax=plt.subplots(figsize=(10,5))
@@ -39,7 +51,6 @@ class SummaryView:
         ax.set_ylabel("Amounts (€)", color = "white")
         ax.tick_params(colors = "white") #Color to dates and amounts
 
-
         #Draw the lines
         if 'I' in daily_data.columns:
             #daily_data.index is the x-axis (dates) daily_data[''] is the y-axis (values)
@@ -48,9 +59,10 @@ class SummaryView:
             ax.plot(daily_data.index, daily_data['E'], 'r-', label='Expense', marker='^')
 
         max_amount = max(daily_data['I'].max(), daily_data['E'].max())
-        plt.yticks(np.arange(0,max_amount,500))
+        plt.yticks(np.arange(0,max_amount+1,500)) #using numpy to range function, and show the Y-axis better
 
-        ax.set_xticks(daily_data.index) #Forces to show all dates
+        ax.set_xticks(dates_to_show)
+        #ax.set_xticks(daily_data.index) #Forces to show all dates
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%d %b')) #Change visual format to dates
         fig.autofmt_xdate()
 
