@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from view.viewExpense import ExpensesView
 from view.viewIncome import IncomesView
+from view.viewSummary import SummaryView
 
 
 class MainInterface:
@@ -35,8 +36,6 @@ class MainInterface:
         tabview.add("Income")
 
         # Add differente information
-        label_p1 = ctk.CTkLabel(tabview.tab("Summary"), text="Summary of the statistics", font=("Arial", 20))
-        label_p1.pack(padx=20, pady=20)
-
+        SummaryView(tabview.tab("Summary"))
         ExpensesView(tabview.tab("Expenses"))
         IncomesView(tabview.tab("Income"))
