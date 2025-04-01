@@ -28,3 +28,6 @@ class TreasuryController:
 
     def get_next_30days_balance(self):
         return self.model.get_next_30days()
+
+    def get_quarter_balance(self):
+        return self.model.get_quarter()

@@ -1,3 +1,5 @@
+from cProfile import label
+
 import customtkinter as ctk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -22,16 +24,18 @@ class SummaryView:
         self.tabview_summary.add("Treasury Balance")
         self.tabview_summary.add("Expenses")
 
-        self.create_chart()
+        self.create_30days_chart()
+        self.create_quarter_chart()
 
     def update_chart(self):
         #Clear widgets on tabs
         for tab_name in ["30 days Balance", "Quaterly Balance", "Yearly Balance", "Treasury Balance", "Expenses"]:
             for widget in self.tabview_summary.tab(tab_name).winfo_children():
                 widget.destroy()
-        self.create_chart()
+        self.create_30days_chart()
+        self.create_quarter_chart()
 
-    def create_chart(self):
+    def create_30days_chart(self):
         daily_data=self.controller.get_next_30days_balance()
 
         first_day = daily_data.index[0] #First range day
@@ -54,9 +58,9 @@ class SummaryView:
         #Draw the lines
         if 'I' in daily_data.columns:
             #daily_data.index is the x-axis (dates) daily_data[''] is the y-axis (values)
-            ax.plot(daily_data.index,daily_data['I'], 'g-',label='Income', marker = 'o')
+            ax.plot(daily_data.index,daily_data['I'], color='#228B22',label='Income', marker = 'o', markersize = 5)
         if 'E' in daily_data.columns:
-            ax.plot(daily_data.index, daily_data['E'], 'r-', label='Expense', marker='^')
+            ax.plot(daily_data.index, daily_data['E'],  color='#d82929', label='Expense', marker='^', markersize = 5)
 
         max_amount = max(daily_data['I'].max(), daily_data['E'].max())
         plt.yticks(np.arange(0,max_amount+1,500)) #using numpy to range function, and show the Y-axis better
@@ -71,5 +75,39 @@ class SummaryView:
 
         #Add the graph to tkinter on a canvas
         canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("30 days Balance"))
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+    def create_quarter_chart(self):
+        monthly_data=self.controller.get_quarter_balance()
+
+        #Set the graph
+        fig,ax = plt.subplots(figsize=(10,5))
+        months = monthly_data.index.strftime('%b') #Better format month
+        bar_width = 0.3
+        x_pos = np.arange(len(months))
+
+        #Draw the bars
+        if 'I' in monthly_data.columns:
+            #x_pos + bar_width/2 -> Right to central point
+            ax.bar(x_pos + bar_width/2, monthly_data['I'],width= bar_width, color='#228B22',label='Income')
+        if 'E' in monthly_data.columns:
+            # x_pos + bar_width/2 -> Left to central point
+            ax.bar(x_pos - bar_width/2, monthly_data['E'],width= bar_width,  color='#d82929', label='Expense')
+
+        #Axis configure
+        ax.set_title("Quarterly Balance", pad  =20)
+        ax.set_xlabel("Month")
+        ax.set_ylabel("Amount (€)", labelpad=10)
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(months)
+
+        ax.legend(facecolor='#2b2b2b', edgecolor='white', labelcolor='white')
+        ax.grid(axis='y', linestyle="--", alpha=0.3)
+
+        plt.tight_layout() #Avoid overlaps
+
+        #Add the graph to tkinter on a canvas
+        canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Quaterly Balance"))
         canvas.draw()
         canvas.get_tk_widget().pack()
