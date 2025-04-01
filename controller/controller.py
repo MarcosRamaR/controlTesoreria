@@ -31,3 +31,6 @@ class TreasuryController:
 
     def get_quarter_balance(self):
         return self.model.get_quarter()
+
+    def get_year_balance(self):
+        return self.model.get_year()

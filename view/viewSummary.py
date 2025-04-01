@@ -26,6 +26,7 @@ class SummaryView:
 
         self.create_30days_chart()
         self.create_quarter_chart()
+        self.create_year_chart()
 
     def update_chart(self):
         #Clear widgets on tabs
@@ -34,6 +35,7 @@ class SummaryView:
                 widget.destroy()
         self.create_30days_chart()
         self.create_quarter_chart()
+        self.create_year_chart()
 
     def create_30days_chart(self):
         daily_data=self.controller.get_next_30days_balance()
@@ -128,8 +130,9 @@ class SummaryView:
         canvas.draw()
         canvas.get_tk_widget().pack()
 
-    def create_quarter_chart(self):
-        monthly_data=self.controller.get_quarter_balance()
+
+    def create_year_chart(self):
+        monthly_data=self.controller.get_year_balance()
 
         #Set the graph
         fig,ax = plt.subplots(figsize=(10,5))
@@ -149,7 +152,7 @@ class SummaryView:
         ax.set_facecolor('#2b2b2b') #Inside graph color
 
         #Axis configure
-        ax.set_title("Quarterly Balance", pad  =20, color="white")
+        ax.set_title("Yearly Balance", pad  =20, color="white")
         ax.set_xlabel("Month", color = "white")
         ax.set_ylabel("Amount (€)", color = "white")
         ax.tick_params(colors="white")
@@ -174,6 +177,6 @@ class SummaryView:
         plt.tight_layout()
 
         #Add the graph to tkinter on a canvas
-        canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Quaterly Balance"))
+        canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Yearly Balance"))
         canvas.draw()
         canvas.get_tk_widget().pack()

@@ -179,4 +179,24 @@ class TreasuryModel:
 
         return monthly_data
 
+    def get_year(self):
+        """Get the balance to this year"""
+        df = pd.read_csv(self.treasury_file)
+        # Make sure the date is a date type, not string
+        df['payment_date'] = pd.to_datetime(df['payment_date'])
+
+        #Get the current year dates
+        today = datetime.now()
+        start_date = datetime(today.year, 1,1) #First day of year
+        end_date = datetime(today.year,12, 31)  #Last day of year
+
+        #Filter data for quarter
+        mask = (df['payment_date']>= start_date) & (df['payment_date'] <= end_date)
+        year_data = df[mask]
+
+        #Group by date(Month) and type, with the sum of amount, unstack separate the columns Expenses and Incomes
+        monthly_data = year_data.groupby([year_data['payment_date'].dt.to_period('M'), 'type'])['amount'].sum().unstack(fill_value=0)
+
+        return monthly_data
+
 
