@@ -2,7 +2,7 @@ from tkinter.constants import FALSE
 
 import pandas as pd
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class TreasuryModel:
@@ -130,5 +130,29 @@ class TreasuryModel:
 
         #This return true if at least 1 row is deleted
         return sum(mask)>0
+
+    def get_next_30days(self):
+        """Get the balance to the next 30 days to graph"""
+
+        df = pd.read_csv(self.treasury_file)
+        # Make sure the date is a date type, not string
+        df['payment_date'] = pd.to_datetime(df['payment_date'])
+
+        #Get the date range
+        today = datetime.now().date()
+        next_30days = today + timedelta(days=30)
+
+        #Filter data on the range
+        mask = (df['payment_date'].dt.date >= today) & (df['payment_date'].dt.date <= next_30days)
+        data_30days = df[mask]
+
+        #Group by date and type, with the sum of amount, unstack separate the columns Expenses and Incomes
+        daily_data = data_30days.groupby(['payment_date', 'type'])['amount'].sum().unstack(fill_value=0)
+
+
+        all_dates = pd.date_range(start=today, end = next_30days)#Generate all dates between start and end
+        daily_data = daily_data.reindex(all_dates,fill_value=0) #Make sure all dates have data
+
+        return daily_data
 
 
