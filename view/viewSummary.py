@@ -95,10 +95,14 @@ class SummaryView:
             # x_pos + bar_width/2 -> Left to central point
             ax.bar(x_pos - bar_width/2, monthly_data['E'],width= bar_width,  color='#d82929', label='Expense')
 
+        fig.patch.set_facecolor('#2b2b2b') #"Background" color
+        ax.set_facecolor('#2b2b2b') #Inside graph color
+
         #Axis configure
-        ax.set_title("Quarterly Balance", pad  =20)
-        ax.set_xlabel("Month")
-        ax.set_ylabel("Amount (€)", labelpad=10)
+        ax.set_title("Quarterly Balance", pad  =20, color="white")
+        ax.set_xlabel("Month", color = "white")
+        ax.set_ylabel("Amount (€)", color = "white")
+        ax.tick_params(colors="white")
         ax.set_xticks(x_pos)
         ax.set_xticklabels(months)
 
@@ -110,9 +114,57 @@ class SummaryView:
             for bar in bars:
                 height = bar.get_height()
                 if height > 0:
-                    ax.text(bar.get_x() + bar.get_width() / 2., height,
-                            f'€{height:}',
-                            ha='center', va='bottom', fontsize=9)
+                    ax.text(bar.get_x() + bar.get_width() / 2., height,f'€{height:}',ha='center', va='bottom', fontsize=9, color = "white")
+
+        if 'E' in monthly_data.columns:
+            add_values(ax.containers[0])
+        if 'I' in monthly_data.columns:
+            add_values(ax.containers[1 if 'E' in monthly_data.columns else 0])
+
+        plt.tight_layout()
+
+        #Add the graph to tkinter on a canvas
+        canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Quaterly Balance"))
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+    def create_quarter_chart(self):
+        monthly_data=self.controller.get_quarter_balance()
+
+        #Set the graph
+        fig,ax = plt.subplots(figsize=(10,5))
+        months = monthly_data.index.strftime('%b') #Better format month
+        bar_width = 0.3
+        x_pos = np.arange(len(months))
+
+        #Draw the bars
+        if 'I' in monthly_data.columns:
+            #x_pos + bar_width/2 -> Right to central point
+            ax.bar(x_pos + bar_width/2, monthly_data['I'],width= bar_width, color='#228B22',label='Income')
+        if 'E' in monthly_data.columns:
+            # x_pos + bar_width/2 -> Left to central point
+            ax.bar(x_pos - bar_width/2, monthly_data['E'],width= bar_width,  color='#d82929', label='Expense')
+
+        fig.patch.set_facecolor('#2b2b2b') #"Background" color
+        ax.set_facecolor('#2b2b2b') #Inside graph color
+
+        #Axis configure
+        ax.set_title("Quarterly Balance", pad  =20, color="white")
+        ax.set_xlabel("Month", color = "white")
+        ax.set_ylabel("Amount (€)", color = "white")
+        ax.tick_params(colors="white")
+        ax.set_xticks(x_pos)
+        ax.set_xticklabels(months)
+
+        ax.legend(facecolor='#2b2b2b', edgecolor='white', labelcolor='white')
+        ax.grid(axis='y', linestyle="--", alpha=0.3)
+
+        def add_values(bars):
+            """Add values to the bars"""
+            for bar in bars:
+                height = bar.get_height()
+                if height > 0:
+                    ax.text(bar.get_x() + bar.get_width() / 2., height,f'€{height:}',ha='center', va='bottom', fontsize=9, color = "white")
 
         if 'E' in monthly_data.columns:
             add_values(ax.containers[0])
