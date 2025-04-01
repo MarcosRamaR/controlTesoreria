@@ -27,6 +27,7 @@ class SummaryView:
         self.create_30days_chart()
         self.create_quarter_chart()
         self.create_year_chart()
+        self.create_expense_chart()
 
     def update_chart(self):
         #Clear widgets on tabs
@@ -36,6 +37,7 @@ class SummaryView:
         self.create_30days_chart()
         self.create_quarter_chart()
         self.create_year_chart()
+        self.create_expense_chart()
 
     def create_30days_chart(self):
         daily_data=self.controller.get_next_30days_balance()
@@ -92,10 +94,13 @@ class SummaryView:
         #Draw the bars
         if 'I' in monthly_data.columns:
             #x_pos + bar_width/2 -> Right to central point
-            ax.bar(x_pos + bar_width/2, monthly_data['I'],width= bar_width, color='#228B22',label='Income')
+            ax.bar(x_pos + bar_width/2, monthly_data['I'],width= bar_width, color='#1c721c',label='Income')
         if 'E' in monthly_data.columns:
             # x_pos + bar_width/2 -> Left to central point
-            ax.bar(x_pos - bar_width/2, monthly_data['E'],width= bar_width,  color='#d82929', label='Expense')
+            ax.bar(x_pos - bar_width/2, monthly_data['E'],width= bar_width,  color='#b82525', label='Expense')
+
+        max_amount = max(monthly_data['I'].max(), monthly_data['E'].max())
+        plt.yticks(np.arange(0, max_amount + 1, 1000))
 
         fig.patch.set_facecolor('#2b2b2b') #"Background" color
         ax.set_facecolor('#2b2b2b') #Inside graph color
@@ -143,10 +148,13 @@ class SummaryView:
         #Draw the bars
         if 'I' in monthly_data.columns:
             #x_pos + bar_width/2 -> Right to central point
-            ax.bar(x_pos + bar_width/2, monthly_data['I'],width= bar_width, color='#228B22',label='Income')
+            ax.bar(x_pos + bar_width/2, monthly_data['I'],width= bar_width, color='#1c721c',label='Income')
         if 'E' in monthly_data.columns:
             # x_pos + bar_width/2 -> Left to central point
-            ax.bar(x_pos - bar_width/2, monthly_data['E'],width= bar_width,  color='#d82929', label='Expense')
+            ax.bar(x_pos - bar_width/2, monthly_data['E'],width= bar_width,  color='#b82525', label='Expense')
+
+        max_amount = max(monthly_data['I'].max(), monthly_data['E'].max())
+        plt.yticks(np.arange(0, max_amount + 1, 1000))
 
         fig.patch.set_facecolor('#2b2b2b') #"Background" color
         ax.set_facecolor('#2b2b2b') #Inside graph color
@@ -178,5 +186,23 @@ class SummaryView:
 
         #Add the graph to tkinter on a canvas
         canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Yearly Balance"))
+        canvas.draw()
+        canvas.get_tk_widget().pack()
+
+
+    def create_expense_chart(self):
+        expenses_company = self.controller.get_data_by_company('E')
+
+        fig, ax = plt.subplots(figsize = (10,5))
+        fig.patch.set_facecolor('#2b2b2b')
+
+        colors = plt.cm.Paired.colors
+
+        ax.pie(expenses_company['amount'],labels=expenses_company['company'],startangle=90, colors=colors,textprops={'color':'white'})
+
+        ax.set_title('Expenses by Company', color = "white")
+        plt.tight_layout()
+
+        canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Expenses"))
         canvas.draw()
         canvas.get_tk_widget().pack()
