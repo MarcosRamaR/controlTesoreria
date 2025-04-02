@@ -1,12 +1,14 @@
 import customtkinter as ctk
 from view.viewExpense import ExpensesView
 from view.viewIncome import IncomesView
+from view.viewSummary import SummaryView
 
 
 class MainInterface:
     def __init__(self, root):
         self.root = root
         self.label = None
+        self.summary_view = None
         self.setup_ui()
 
     def setup_ui(self):
@@ -35,8 +37,10 @@ class MainInterface:
         tabview.add("Income")
 
         # Add differente information
-        label_p1 = ctk.CTkLabel(tabview.tab("Summary"), text="Summary of the statistics", font=("Arial", 20))
-        label_p1.pack(padx=20, pady=20)
+        self.summary_view = SummaryView(tabview.tab("Summary"))
+        ExpensesView(tabview.tab("Expenses"), self.update_summary) #we need the update function
+        IncomesView(tabview.tab("Income"),self.update_summary)
 
-        ExpensesView(tabview.tab("Expenses"))
-        IncomesView(tabview.tab("Income"))
+    def update_summary(self):
+        if self.summary_view:
+            self.summary_view.update_chart()

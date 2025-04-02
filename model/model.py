@@ -2,7 +2,7 @@ from tkinter.constants import FALSE
 
 import pandas as pd
 import os
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 class TreasuryModel:
@@ -130,5 +130,72 @@ class TreasuryModel:
 
         #This return true if at least 1 row is deleted
         return sum(mask)>0
+
+    def get_next_days(self,days = 30):
+        """Get the balance to the next 30 days to graph"""
+
+        df = pd.read_csv(self.treasury_file)
+        # Make sure the date is a date type, not string
+        df['payment_date'] = pd.to_datetime(df['payment_date'])
+
+        #Get the date range
+        today = datetime.now().date()
+        next_days = today + timedelta(days=days)
+
+        #Filter data on the range
+        mask = (df['payment_date'].dt.date >= today) & (df['payment_date'].dt.date <= next_days)
+        data_days = df[mask]
+
+        #Group by date and type, with the sum of amount, unstack separate the columns Expenses and Incomes
+        daily_data = data_days.groupby(['payment_date', 'type'])['amount'].sum().unstack(fill_value=0)
+
+        all_dates = pd.date_range(start=today, end = next_days)#Generate all dates between start and end
+        daily_data = daily_data.reindex(all_dates,fill_value=0) #Make sure all dates have data
+
+        return daily_data
+
+    def get_quarter(self):
+        """Get the balance to this quarter"""
+        df = pd.read_csv(self.treasury_file)
+        # Make sure the date is a date type, not string
+        df['payment_date'] = pd.to_datetime(df['payment_date'])
+
+        #Get the current quarter, start and end
+        today = datetime.now()
+        current_quarter = (today.month -1) // 3+1 #Actual month - 1 / number months +1
+        first_month = 3 * current_quarter -2
+        last_month = 3 * current_quarter
+
+        start_date = datetime(today.year, first_month,1) #First day current quarter
+        end_date = datetime(today.year, last_month + 1, 1) - timedelta(days=1) #Firt day next quarter less 1 day
+
+        #Filter data for quarter
+        mask = (df['payment_date']>= start_date) & (df['payment_date'] <= end_date)
+        quarter_data = df[mask]
+
+        #Group by date(Month) and type, with the sum of amount, unstack separate the columns Expenses and Incomes
+        monthly_data = quarter_data.groupby([quarter_data['payment_date'].dt.to_period('M'), 'type'])['amount'].sum().unstack(fill_value=0)
+
+        return monthly_data
+
+    def get_year(self):
+        """Get the balance to this year"""
+        df = pd.read_csv(self.treasury_file)
+        # Make sure the date is a date type, not string
+        df['payment_date'] = pd.to_datetime(df['payment_date'])
+
+        #Get the current year dates
+        today = datetime.now()
+        start_date = datetime(today.year, 1,1) #First day of year
+        end_date = datetime(today.year,12, 31)  #Last day of year
+
+        #Filter data for quarter
+        mask = (df['payment_date']>= start_date) & (df['payment_date'] <= end_date)
+        year_data = df[mask]
+
+        #Group by date(Month) and type, with the sum of amount, unstack separate the columns Expenses and Incomes
+        monthly_data = year_data.groupby([year_data['payment_date'].dt.to_period('M'), 'type'])['amount'].sum().unstack(fill_value=0)
+
+        return monthly_data
 
 
