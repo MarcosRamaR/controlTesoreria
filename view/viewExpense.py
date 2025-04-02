@@ -6,8 +6,6 @@ from functools import partial
 class ExpensesView:
     """Class for display the Expenses """
 
-
-
     def __init__(self,frame,update_callback = None):
         self.frame = frame
         self.controller = TreasuryController() #Controller for data operations
@@ -94,6 +92,9 @@ class ExpensesView:
         save_expense = ctk.CTkButton(master=frame_new_expense, text="Save Expense", command=self.button_new_expense)
         save_expense.grid(row=1, column=5)
 
+        #label to show error data message
+        self.error_lab = ctk.CTkLabel(frame_new_expense, text="",text_color="red", font=("Arial",10))
+        self.error_lab.grid(row=3,column=0, padx=10,pady=(5,0))
 
     def button_new_expense(self):
         print("button new pressed")
@@ -103,11 +104,32 @@ class ExpensesView:
         entry_descr = self.entry_descr.get()
         entry_amount =self.entry_amount.get()
 
-        self.controller.add_new_data(entry_invoice,entry_payment,entry_company,entry_descr,entry_amount,"E")
-        self.load_expenses()
+        self.error_lab.configure(text="") #Clear error label
 
-        if self.update_callback:
-            self.update_callback()
+        #validate data on controller
+        success, errors = self.controller.add_new_data(entry_invoice,entry_payment,entry_company,entry_descr,entry_amount,"E")
+
+        if success:
+            self.entry_invoice.delete(0,'end')
+            self.entry_payment.delete(0,'end')
+            self.entry_company.delete(0,'end')
+            self.entry_descr.delete(0,'end')
+            self.entry_amount.delete(0,'end')
+
+            self.load_expenses()
+            if self.update_callback:
+                self.update_callback()
+        else:
+            error_message = ""
+            for field, message in errors.items():
+                if field == "invoice_date":
+                    error_message += f"Invoice Date: {message}\n"
+                elif field == "payment_date":
+                    error_message += f"Payment Date: {message}\n"
+                elif field == "amount":
+                    error_message += f"Amount: {message}\n"
+
+            self.error_lab.configure(text=error_message)
 
     def button_delete_expense(self):
         print("button delete pressed")
