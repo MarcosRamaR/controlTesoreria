@@ -4,7 +4,7 @@ from functools import partial
 
 
 class IncomesView:
-    """Class for display the Expenses """
+    """Class for display the Incomes """
 
     def __init__(self,frame,update_callback=None):
         self.frame = frame
@@ -51,7 +51,7 @@ class IncomesView:
         for col, text in enumerate(headers):
             ctk.CTkLabel(header_frame,text=text,anchor="w").grid(row=0, column=col, padx=5, sticky="ew")
 
-        #Scrollable frame for the expenses
+        #Scrollable frame for the incomes
         self.scrollable_frame = ctk.CTkScrollableFrame(container, height=300)
         self.scrollable_frame.pack(fill="both", expand=True, pady=(0, 5))
 
@@ -183,19 +183,19 @@ class IncomesView:
         self.load_incomes()
 
     def load_incomes(self):
-        """Load and display the expenses"""
+        """Load and display the incomes"""
         print("Loading Data...")
         order_by=self.order_option.get()
         ascending=self.orientation_option.get() == "ascending"
 
-        expenses=self.controller.get_data(type="E",sort_by=order_by,ascending=ascending)
+        incomes=self.controller.get_data(type="I",sort_by=order_by,ascending=ascending)
 
         #Delete previous widgets
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
 
         #Create a row for each expense
-        for _, row in expenses.iterrows():
+        for _, row in incomes.iterrows():
 
             # Create row container
             row_container = ctk.CTkFrame(self.scrollable_frame, height=35)

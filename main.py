@@ -1,9 +1,11 @@
 import customtkinter as ctk
 from view.viewInterface import MainInterface
 
+
 def on_closing():
     root.quit()
     root.destroy()
+
 
 ctk.set_appearance_mode("dark")
 # Create main window

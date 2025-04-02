@@ -2,6 +2,7 @@ import customtkinter as ctk
 from view.viewExpense import ExpensesView
 from view.viewIncome import IncomesView
 from view.viewSummary import SummaryView
+
 from PIL import Image, ImageTk
 import os
 
@@ -14,6 +15,7 @@ class MainInterface:
         self.splash_image = None
         self.splash_frame = None
         self.setup_ui()
+
 
     def setup_ui(self):
         self.load_icon()

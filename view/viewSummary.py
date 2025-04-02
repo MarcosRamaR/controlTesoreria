@@ -88,6 +88,7 @@ class SummaryView:
         if 'E' in daily_data.columns:
             ax.plot(daily_data.index, daily_data['E'],  color='#d82929', label='Expense', marker='^', markersize = 5)
 
+
         max_amount = max(daily_data['I'].max(), daily_data['E'].max())
         plt.yticks(np.arange(0,max_amount+1,500)) #using numpy to range function, and show the Y-axis better
 
@@ -119,6 +120,8 @@ class SummaryView:
         if 'E' in monthly_data.columns:
             # x_pos + bar_width/2 -> Left to central point
             ax.bar(x_pos - bar_width/2, monthly_data['E'],width= bar_width,  color='#b82525', label='Expense')
+
+
 
         max_amount = max(monthly_data['I'].max(), monthly_data['E'].max())
         plt.yticks(np.arange(0, max_amount + 1, 1000))
