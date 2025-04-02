@@ -47,8 +47,7 @@ class SummaryView:
 
         #Delete previous widgets except days selector
         for widget in self.tabview_summary.tab("Treasury Balance").winfo_children():
-            if not (isinstance(widget, ctk.CTkFrame) and
-                    not any(isinstance(widget, t) for t in [ctk.CTkLabel, ctk.CTkOptionMenu])):
+            if not (isinstance(widget, ctk.CTkFrame) and not any(isinstance(widget, t) for t in [ctk.CTkLabel, ctk.CTkOptionMenu])):
                 widget.destroy()
 
         #Close matplotlib figures
@@ -56,10 +55,11 @@ class SummaryView:
         self.create_days_chart()
 
     def update_chart(self):
-        #Clear widgets on tabs
+        #Clear widgets on tabs except days selector
         for tab_name in [ "Treasury Balance", "Quaterly Balance", "Yearly Balance", "Expenses"]:
             for widget in self.tabview_summary.tab(tab_name).winfo_children():
-                widget.destroy()
+                if not (isinstance(widget, ctk.CTkFrame) and not any(isinstance(widget, t) for t in [ctk.CTkLabel, ctk.CTkOptionMenu])):
+                    widget.destroy()
 
         self.create_days_chart()
         self.create_quarter_chart()
@@ -79,10 +79,7 @@ class SummaryView:
         ax.set_title("Treasury Control", color= "white")
         ax.set_xlabel("Date", color= "white")
         ax.set_ylabel("Amounts (€)", color = "white")
-        if self.days_period > 30:
-            ax.tick_params(colors = "white",labelsize=5) #Color to dates and amounts
-        else:
-            ax.tick_params(colors = "white",labelsize=8)
+        ax.tick_params(colors = "white") #Color to dates and amounts
 
         #Draw the lines
         if 'I' in daily_data.columns:
