@@ -1,3 +1,5 @@
+import sys
+
 import customtkinter as ctk
 from view.viewExpense import ExpensesView
 from view.viewIncome import IncomesView
@@ -14,8 +16,8 @@ class MainInterface:
         self.summary_view = None
         self.splash_image = None
         self.splash_frame = None
+        self.image_label = None
         self.setup_ui()
-
 
     def setup_ui(self):
         self.load_icon()
@@ -23,7 +25,8 @@ class MainInterface:
         self.splash_frame.pack(fill="both",expand=True)
 
         try:
-            image_path= "assets/Logo.png"
+            #need this path to can get the image on .exe
+            image_path= os.path.join(os.path.dirname(__file__),'..','assets','Logo.png')
             img = Image.open(image_path)
 
             self.splash_image = ctk.CTkImage(light_image=img,dark_image=img,size=img.size)
@@ -41,13 +44,12 @@ class MainInterface:
         self.root.after(2000, self.change_window)
 
     def change_window(self):
-        # Delete first label
-        self.label.destroy()
-        self.image_label.destroy()
+        # Delete frame
         self.splash_frame.destroy()
 
         # Creation of tabs
         self.create_tabs()
+        self.root.update_idletasks()
 
     def create_tabs(self):
         # Create a Tabview
