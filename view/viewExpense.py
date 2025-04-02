@@ -18,6 +18,27 @@ class ExpensesView:
         container = ctk.CTkFrame(self.frame, fg_color="transparent")
         container.pack(fill="both", expand=True, padx=10, pady=0)
 
+        #Create frame to orderby options
+        order_frame = ctk.CTkFrame(container,fg_color = None)
+        order_frame.pack(fill="x")
+
+        #Label and option to order by columns
+        order_label = ctk.CTkLabel(order_frame,text="Sort by:")
+        order_label.pack(side="left")
+
+        self.order_option = ctk.StringVar(value="invoice_date")
+        order_options= ["invoice_date", "payment_date", "company", "amount"]
+        order_menu = ctk.CTkOptionMenu(order_frame, variable=self.order_option, values=order_options,command = self.field_order_change)
+        order_menu.pack(side="left")
+
+        #Label and option change order
+        orientation_label = ctk.CTkLabel(order_frame,text="Order:")
+        orientation_label.pack(side="left")
+
+        self.orientation_option= ctk.StringVar(value="descending")
+        orientation_menu = ctk.CTkOptionMenu(order_frame, variable=self.orientation_option, values=['ascending','descending'],command = self.orientation_order_change)
+        orientation_menu.pack(side="left")
+
         #Create the header frame for columns
         header_frame = ctk.CTkFrame(container, fg_color=None)
         header_frame.pack(fill="x", pady=(0, 5))
@@ -156,12 +177,19 @@ class ExpensesView:
         else:
             print("No expense selected")
 
+    def field_order_change(self,field):
+        self.load_expenses()
 
+    def orientation_order_change(self,order):
+        self.load_expenses()
 
     def load_expenses(self):
         """Load and display the expenses"""
         print("Loading Data...")
-        expenses=self.controller.get_data(type="E")
+        order_by=self.order_option.get()
+        ascending=self.orientation_option.get() == "ascending"
+
+        expenses=self.controller.get_data(type="E",sort_by=order_by,ascending=ascending)
 
         #Delete previous widgets
         for widget in self.scrollable_frame.winfo_children():
