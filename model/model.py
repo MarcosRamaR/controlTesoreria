@@ -8,7 +8,6 @@ from datetime import datetime, timedelta
 class TreasuryModel:
     def __init__(self, treasury_file = 'treasury_record.csv'):
         self.treasury_file = treasury_file
-
         self.initialize_file()
 
     #If not exists file .csv, create
@@ -37,7 +36,8 @@ class TreasuryModel:
             'amount': [float(amount)],
             'type': [type]
         })
-        df = pd.concat([df,new_data], ignore_index = True)
+        if not new_data.empty:
+            df = pd.concat([df,new_data], ignore_index = True)
         df.to_csv(self.treasury_file, index = False)
 
     def get_records(self, start_date = None, end_date = None, type = None,company = None, sort_by = None, ascending = True):
@@ -153,12 +153,23 @@ class TreasuryModel:
         mask = (df['payment_date'].dt.date >= today) & (df['payment_date'].dt.date <= next_days)
         data_days = df[mask]
 
+        if data_days.empty:
+            empty_df = pd.DataFrame(index=pd.date_range(start=today, end=next_days))
+            empty_df['I'] =0
+            empty_df['E'] = 0
+            return empty_df
+
         #Group by date and type, with the sum of amount, unstack separate the columns Expenses and Incomes
         daily_data = data_days.groupby(['payment_date', 'type'])['amount'].sum().unstack(fill_value=0)
+
 
         all_dates = pd.date_range(start=today, end = next_days)#Generate all dates between start and end
         daily_data = daily_data.reindex(all_dates,fill_value=0) #Make sure all dates have data
 
+        if 'E' not in daily_data.columns:
+            daily_data['E'] = 0
+        if 'I' not in daily_data.columns:
+            daily_data['I'] = 0
         return daily_data
 
     def get_quarter(self):
@@ -180,8 +191,20 @@ class TreasuryModel:
         mask = (df['payment_date']>= start_date) & (df['payment_date'] <= end_date)
         quarter_data = df[mask]
 
+        if quarter_data.empty:
+            months = pd.date_range(start=start_date, end=end_date, freq='ME').to_period('M')
+            empty_df= pd.DataFrame(index=months)
+            empty_df['I'] =0
+            empty_df['E'] = 0
+            return empty_df
+
         #Group by date(Month) and type, with the sum of amount, unstack separate the columns Expenses and Incomes
         monthly_data = quarter_data.groupby([quarter_data['payment_date'].dt.to_period('M'), 'type'])['amount'].sum().unstack(fill_value=0)
+
+        if 'E' not in monthly_data.columns:
+            monthly_data['E'] = 0
+        if 'I' not in monthly_data.columns:
+            monthly_data['I'] = 0
 
         return monthly_data
 
@@ -200,8 +223,19 @@ class TreasuryModel:
         mask = (df['payment_date']>= start_date) & (df['payment_date'] <= end_date)
         year_data = df[mask]
 
+        if year_data.empty:
+            months = pd.date_range(start=start_date, end=end_date, freq='ME').to_period('M')
+            empty_df = pd.DataFrame(index=months)
+            empty_df['I'] = 0
+            empty_df['E'] = 0
+            return empty_df
         #Group by date(Month) and type, with the sum of amount, unstack separate the columns Expenses and Incomes
         monthly_data = year_data.groupby([year_data['payment_date'].dt.to_period('M'), 'type'])['amount'].sum().unstack(fill_value=0)
+
+        if 'E' not in monthly_data.columns:
+            monthly_data['E'] = 0
+        if 'I' not in monthly_data.columns:
+            monthly_data['I'] = 0
 
         return monthly_data
 
