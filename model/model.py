@@ -72,7 +72,14 @@ class TreasuryModel:
             df = df[df['company'].str.contains(company, case = False)]
 
         if sort_by:
-            df = df.sort_values(by=sort_by, ascending= ascending)
+            try:
+                sort_by = sort_by.strip().lower() #Delete spaces and put all on lower case
+                if sort_by in df.columns:
+                    df = df.sort_values(by=sort_by, ascending= ascending)
+                else:
+                    print(f"Warning: Column '{sort_by}' not found for sorting. Data will remain unsorted.")
+            except Exception as e:
+                print(f"Error sorting by {sort_by}: {str(e)}" )
 
         return df
 
