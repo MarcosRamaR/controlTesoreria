@@ -24,16 +24,16 @@ class ExpensesView:
 
         #Label and option to order by columns
         order_label = ctk.CTkLabel(order_frame,text="Sort by:")
-        order_label.pack(side="left")
+        order_label.pack(side="left", padx=(0,5))
 
         self.order_option = ctk.StringVar(value="invoice_date")
         order_options= ["invoice_date", "payment_date", "company", "amount"]
         order_menu = ctk.CTkOptionMenu(order_frame, variable=self.order_option, values=order_options,command = self.field_order_change)
-        order_menu.pack(side="left")
+        order_menu.pack(side="left",padx=(0,10))
 
         #Label and option change order
         orientation_label = ctk.CTkLabel(order_frame,text="Order:")
-        orientation_label.pack(side="left")
+        orientation_label.pack(side="left",padx=(0,5))
 
         self.orientation_option= ctk.StringVar(value="descending")
         orientation_menu = ctk.CTkOptionMenu(order_frame, variable=self.orientation_option, values=['ascending','descending'],command = self.orientation_order_change)
