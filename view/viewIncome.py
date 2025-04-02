@@ -92,8 +92,11 @@ class IncomesView:
         save_income = ctk.CTkButton(master=frame_new_income, text="Save Income", command=self.button_new_income)
         save_income.grid(row=1, column=5)
 
+        self.error_frame = ctk.CTkFrame(container_new_income,fg_color="transparent", height=20)
+        self.error_frame.pack(fill="x")
+
         #label to show error data message
-        self.error_lab = ctk.CTkLabel(frame_new_income, text="",text_color="red", font=("Arial",10))
+        self.error_lab = ctk.CTkLabel(self.error_frame, text="",text_color="red", font=("Arial",10))
         self.error_lab.grid(row=3,column=0, padx=10,pady=(5,0))
 
     def button_new_income(self):
