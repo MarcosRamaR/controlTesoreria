@@ -1,12 +1,21 @@
 import pandas as pd
 from model.model import TreasuryModel
+from model.validation import Validator
 
 class TreasuryController:
     def __init__(self):
         self.model = TreasuryModel()
+        self.validator = Validator()
 
     def add_new_data(self,invoice_date,payment_date,company,description,amount,type):
-        self.model.add_treasury_record(invoice_date,payment_date,company,description,amount,type)
+        #Validation of data
+        valid, errors = self.validator.validate_data(invoice_date,payment_date,amount)
+
+        if valid:
+            self.model.add_treasury_record(invoice_date,payment_date,company,description,amount,type)
+            return True,None
+        else:
+            return False, errors
 
     def get_data(self, start_date = None, end_date = None, type = None,company = None, sort_by = None, ascending = True):
         return self.model.get_records(start_date,end_date,type,company,sort_by,ascending)
