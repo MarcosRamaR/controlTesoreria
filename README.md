@@ -53,5 +53,5 @@ If you want to back up the data, simply copy that .csv file. Just keep in mind t
 ## License
 
 <div align="center">
-
+This project is open source and free to use. 
 </div>
