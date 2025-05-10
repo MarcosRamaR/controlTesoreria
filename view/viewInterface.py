@@ -76,11 +76,10 @@ class MainInterface:
             image_path= "assets/logo.ico"
             self.root.iconbitmap(image_path)
         except Exception as e:
-            print("Intentamos logo png")
             try:
                 image_path = "assets/Logo.png"
                 img = Image.open(image_path)
                 photo = ImageTk.PhotoImage(img)
                 self.root.wm_iconphoto(True,photo)
             except Exception as e:
-                print("Fallo de logo total")
+                print("Logo fail")
