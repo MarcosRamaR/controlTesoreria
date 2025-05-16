@@ -1,11 +1,16 @@
 from datetime import datetime
+import pandas as pd
 
 class Validator:
     @staticmethod
     def validate_date(date):
         """Validate ifs is a valid format to date"""
         try:
-            datetime.strptime(date,'%Y-%m-%d') #Try parse the date, must be Y nor y for 4 digits year
+            controled_date = datetime.strptime(date,'%Y-%m-%d') #Try parse the date, must be Y nor y for 4 digits year
+
+            if not (pd.Timestamp.min <= pd.Timestamp(controled_date) <= pd.Timestamp.max): #Check if input date have a valid value on Pandas
+                return False, f"Date out of range. Must be between {pd.Timestamp.min.date()} and {pd.Timestamp.max.date()}."
+
             return True,None #If success return true without message
         except ValueError:
             return False, "Invalid date format. Use YYYY-MM-DD"
