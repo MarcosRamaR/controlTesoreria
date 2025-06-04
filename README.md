@@ -12,7 +12,7 @@
 
 * [Description](#description)
 * [Funcionalities](#functionalities)
-* [Acceso al proyecto](#acceso)
+* [Acceso al proyecto](#access-to-the-project)
 * [Used Technologies](#used-technologies)
 * [Developers](#developers)
 * [License](#license)
@@ -31,9 +31,6 @@ Application for expense and income management and treasury forecasting. Mainly f
 - `Control Charts`: Charts to show the balance and treasury evolution (quaterly and annually).
 - `Expense Chart`: Chart to display expenses grouped by companies, showing their total expenditure.
 
-## Known Issues
-
-- Dates earlier than **1677-09-21** or later than **2262-04-11** may cause errors when processed, due to limitations of the `datetime64[ns]` type used by pandas.
 
 ## Access to the project
 
