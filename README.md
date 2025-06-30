@@ -14,6 +14,7 @@
 * [Funcionalities](#functionalities)
 * [Acceso al proyecto](#acceso)
 * [Used Technologies](#used-technologies)
+* [Planned Improvements](#planned-improvements)
 * [Developers](#developers)
 * [License](#license)
 
@@ -31,10 +32,6 @@ Application for expense and income management and treasury forecasting. Mainly f
 - `Control Charts`: Charts to show the balance and treasury evolution (quaterly and annually).
 - `Expense Chart`: Chart to display expenses grouped by companies, showing their total expenditure.
 
-## Known Issues
-
-- Dates earlier than **1677-09-21** or later than **2262-04-11** may cause errors when processed, due to limitations of the `datetime64[ns]` type used by pandas.
-
 ## Access to the project
 
 To use this application, you only need to run the .exe file included in the project. The first time the application is used, a .CSV file will be generated in the same folder where the .exe is located.
@@ -48,6 +45,10 @@ If you want to back up the data, simply copy that .csv file. Just keep in mind t
 
 - Pandas  
 - Matplotlib
+
+## Planned Improvements
+
+- Add the option to enter the date manually for the main and expense charts
 
 ## Developers
 
