@@ -14,6 +14,7 @@
 * [Funcionalities](#functionalities)
 * [Acceso al proyecto](#access-to-the-project)
 * [Used Technologies](#used-technologies)
+* [Planned Improvements](#planned-improvements)
 * [Developers](#developers)
 * [License](#license)
 
@@ -45,6 +46,10 @@ If you want to back up the data, simply copy that .csv file. Just keep in mind t
 
 - Pandas  
 - Matplotlib
+
+## Planned Improvements
+
+- Add the option to enter the date manually for the main and expense charts
 
 ## Developers
 

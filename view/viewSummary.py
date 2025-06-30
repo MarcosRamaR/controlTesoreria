@@ -90,7 +90,7 @@ class SummaryView:
 
 
         max_amount = max(daily_data['I'].max(), daily_data['E'].max())
-        plt.yticks(np.arange(0,max_amount+1,500)) #using numpy to range function, and show the Y-axis better
+        plt.yticks(np.arange(0,max_amount+1,100)) #using numpy to range function, and show the Y-axis better
 
         ax.xaxis.set_major_formatter(mdates.DateFormatter('%d %b')) #Change visual format to dates
         fig.autofmt_xdate()
