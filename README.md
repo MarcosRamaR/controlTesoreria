@@ -12,7 +12,7 @@
 
 * [Description](#description)
 * [Funcionalities](#functionalities)
-* [Acceso al proyecto](#acceso)
+* [Acceso al proyecto](#access-to-the-project)
 * [Used Technologies](#used-technologies)
 * [Planned Improvements](#planned-improvements)
 * [Developers](#developers)
@@ -31,6 +31,7 @@ Application for expense and income management and treasury forecasting. Mainly f
 - `Forecast Charts`: Charts to display the projetion of upcoming transactions (30,60 and 90 days).
 - `Control Charts`: Charts to show the balance and treasury evolution (quaterly and annually).
 - `Expense Chart`: Chart to display expenses grouped by companies, showing their total expenditure.
+
 
 ## Access to the project
 
