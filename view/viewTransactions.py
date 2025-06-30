@@ -186,7 +186,7 @@ class BaseTransactionView:
         for widget in self.scrollable_frame.winfo_children():
             widget.destroy()
 
-        for _, row in transactions.iterrows():
+        for index, row in transactions.iterrows():
             row_container = ctk.CTkFrame(self.scrollable_frame, height=35)
             row_container.pack(fill="x", pady=0)
 
