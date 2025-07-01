@@ -49,7 +49,7 @@ If you want to back up the data, simply copy that .csv file. Just keep in mind t
 
 ## Planned Improvements
 
-- Add the option to enter the date manually for the main and expense charts
+- Add option to export information
 
 ## Developers
 

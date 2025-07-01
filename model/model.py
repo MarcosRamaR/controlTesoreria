@@ -138,39 +138,47 @@ class TreasuryModel:
         #This return true if at least 1 row is deleted
         return sum(mask)>0
 
-    def get_next_days(self,days = 30):
-        """Get the balance to the next 30 days to graph"""
+    def get_next_days(self, days=30, from_date=None, to_date=None):
+        try:
+            # Read data
+            df = pd.read_csv(self.treasury_file)
+            df['payment_date'] = pd.to_datetime(df['payment_date'], format='%Y-%m-%d', errors='coerce')
+            df = df.dropna(subset=['payment_date'])
 
-        df = pd.read_csv(self.treasury_file)
-        # Make sure the date is a date type, not string
-        df['payment_date'] = pd.to_datetime(df['payment_date'])
+            today = datetime.now().date()
 
-        #Get the date range
-        today = datetime.now().date()
-        next_days = today + timedelta(days=days)
+            # Set date range
+            if days > 0:
+                start_date = datetime.now().date()
+                end_date = start_date + timedelta(days=days)
+            else:
+                start_date = pd.to_datetime(from_date).date() if from_date else datetime.now().date()
+                end_date = pd.to_datetime(to_date).date() if to_date else datetime.now().date()
 
-        #Filter data on the range
-        mask = (df['payment_date'].dt.date >= today) & (df['payment_date'].dt.date <= next_days)
-        data_days = df[mask]
+            date_range = pd.date_range(start=start_date, end=end_date, freq='D')
 
-        if data_days.empty:
-            empty_df = pd.DataFrame(index=pd.date_range(start=today, end=next_days))
-            empty_df['I'] =0
-            empty_df['E'] = 0
-            return empty_df
+            #Filter data
+            mask = (df['payment_date'].dt.date >= start_date) & (df['payment_date'].dt.date <= end_date)
+            filtered_data = df[mask]
 
-        #Group by date and type, with the sum of amount, unstack separate the columns Expenses and Incomes
-        daily_data = data_days.groupby(['payment_date', 'type'])['amount'].sum().unstack(fill_value=0)
+            if filtered_data.empty:
+                empty_df = pd.DataFrame(index=date_range)
+                empty_df['I'] = 0
+                empty_df['E'] = 0
+                return empty_df
 
-        if 'E' not in daily_data.columns:
-            daily_data['E'] = 0
-        if 'I' not in daily_data.columns:
-            daily_data['I'] = 0
+            daily_data = filtered_data.groupby(['payment_date', 'type'])['amount'].sum().unstack(fill_value=0)
+            daily_data = daily_data.reindex(date_range, fill_value=0)
 
-        all_dates = pd.date_range(start=today, end = next_days)#Generate all dates between start and end
-        daily_data = daily_data.reindex(all_dates,fill_value=0) #Make sure all dates have data
+            for col in ['E', 'I']:
+                if col not in daily_data.columns:
+                    daily_data[col] = 0
 
-        return daily_data
+            return daily_data
+
+        except Exception as e:
+            print(f"Error processing data: {str(e)}")
+            return pd.DataFrame()
 
     def get_quarter(self):
         """Get the balance to this quarter"""

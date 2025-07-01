@@ -2,8 +2,10 @@ import customtkinter as ctk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.dates as mdates
-from controller.controller import TreasuryController
 import numpy as np
+from controller.controller import TreasuryController
+from view.dateSelector import DateRangeSelector
+
 
 
 class SummaryView:
@@ -12,7 +14,7 @@ class SummaryView:
     def __init__(self,frame):
         self.frame = frame
         self.controller = TreasuryController()
-        self.days_period = 30 #Default period for days balance
+        self.days_period = 30
 
         #container for tabs
         self.tabview_summary = ctk.CTkTabview(self.frame)
@@ -24,51 +26,85 @@ class SummaryView:
         self.tabview_summary.add("Yearly Balance")
         self.tabview_summary.add("Expenses")
 
-        #Frame to days selector
-        day_frame = ctk.CTkFrame(self.tabview_summary.tab("Treasury Balance"),fg_color="transparent")
-        day_frame.pack(fill="x")
-        day_label = ctk.CTkLabel(day_frame,text="Days to show:")
-        day_label.pack(side="left")
-
-        days_option =["30","60","90"]
-        self.days_var = ctk.StringVar(value="30") #var to save the days option
-
-        #Selector of days
-        days_list = ctk.CTkOptionMenu(day_frame,values=days_option,variable=self.days_var,command=self.on_days_change)
-        days_list.pack(side="left")
-
-        self.create_days_chart()
+        self.create_treasury_balance_tab()
         self.create_quarter_chart()
         self.create_year_chart()
         self.create_expense_chart()
 
-    def on_days_change(self,choice):
-        self.days_period = int(choice) #Update selected day
+    def create_treasury_balance_tab(self):
+        tab = self.tabview_summary.tab("Treasury Balance")
 
+        #Frame to selectors
+        selector_frame = ctk.CTkFrame(tab, fg_color="transparent")
+        selector_frame.pack(fill="x", padx=10, pady=5)
+
+        #Date selector
+        ctk.CTkLabel(selector_frame, text="Days to show:").pack(side="left", padx=(0, 5))
+        self.days_var = ctk.StringVar(value="30")
+        days_list = ctk.CTkOptionMenu(
+            selector_frame,
+            values=["30", "60", "90", "Custom"],
+            variable=self.days_var,
+            command=self.on_days_change
+        )
+        days_list.pack(side="left", padx=(0, 10))
+
+        #Range date selector
+        self.date_range_selector = DateRangeSelector(
+            selector_frame,
+            callback=self.update_chart
+        )
+        self.date_range_selector.pack_forget()
+
+        #Crete the chart
+        self.create_days_chart()
+
+    def on_days_change(self,choice):
+        if choice == "Custom":
+            self.date_range_selector.pack(side="left", fill="x", expand=True)
+            self.days_period = 0
+        else:
+            self.date_range_selector.pack_forget()
+            self.days_period = int(choice)
+            self.update_chart()
         #Delete previous widgets except days selector
         for widget in self.tabview_summary.tab("Treasury Balance").winfo_children():
             if not (isinstance(widget, ctk.CTkFrame) and not any(isinstance(widget, t) for t in [ctk.CTkLabel, ctk.CTkOptionMenu])):
                 widget.destroy()
-
         #Close matplotlib figures
         plt.close('all')
         self.create_days_chart()
 
-    def update_chart(self):
+    def update_chart(self, from_date=None, to_date=None):
         #Clear widgets on tabs except days selector
         for tab_name in [ "Treasury Balance", "Quaterly Balance", "Yearly Balance", "Expenses"]:
             for widget in self.tabview_summary.tab(tab_name).winfo_children():
                 if not (isinstance(widget, ctk.CTkFrame) and not any(isinstance(widget, t) for t in [ctk.CTkLabel, ctk.CTkOptionMenu])):
                     widget.destroy()
 
-        self.create_days_chart()
+        #To use the range of dates
+        if self.days_var.get() == "Custom" and from_date and to_date:
+            daily_data = self.controller.get_next_days_balance(
+                days = None,  # No usamos days_period en modo custom
+                from_date=from_date.strftime('%Y-%m-%d'),
+                to_date=to_date.strftime('%Y-%m-%d')
+            )
+        else:
+            daily_data = self.controller.get_next_days_balance(
+                self.days_period,
+                from_date=from_date.strftime('%Y-%m-%d') if from_date else None,
+                to_date=to_date.strftime('%Y-%m-%d') if to_date else None
+            )
+
+        self.create_days_chart(daily_data)
         self.create_quarter_chart()
         self.create_year_chart()
         self.create_expense_chart()
 
-    def create_days_chart(self):
+    def create_days_chart(self, daily_data=None):
         """Create the graph with selected days range"""
-        daily_data=self.controller.get_next_days_balance(self.days_period)
+        if daily_data is None:
+            daily_data = self.controller.get_next_days_balance(self.days_period)
 
         #Set the graph
         fig,ax=plt.subplots(figsize=(10,5))
@@ -242,3 +278,12 @@ class SummaryView:
         canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Expenses"))
         canvas.draw()
         canvas.get_tk_widget().pack()
+
+    def on_range_mode_change(self, choice):
+        """To change visibility of date selector"""
+        if choice == "Custom":
+            self.date_range_selector.pack(side="left", fill="x", expand=True)
+        else:
+            self.date_range_selector.pack_forget()
+            self.days_period = int(choice)
+            self.update_chart()
