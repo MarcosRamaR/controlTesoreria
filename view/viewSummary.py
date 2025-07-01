@@ -2,8 +2,10 @@ import customtkinter as ctk
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.dates as mdates
-from controller.controller import TreasuryController
 import numpy as np
+from controller.controller import TreasuryController
+from view.dateSelector import DateRangeSelector
+
 
 
 class SummaryView:
@@ -13,6 +15,12 @@ class SummaryView:
         self.frame = frame
         self.controller = TreasuryController()
         self.days_period = 30 #Default period for days balance
+
+        self.date_range_selector = DateRangeSelector(
+            self.frame,
+            callback=self.update_chart
+        )
+        self.date_range_selector.pack(fill="x", padx=10, pady=5)
 
         #container for tabs
         self.tabview_summary = ctk.CTkTabview(self.frame)
@@ -54,21 +62,28 @@ class SummaryView:
         plt.close('all')
         self.create_days_chart()
 
-    def update_chart(self):
+    def update_chart(self, from_date=None, to_date=None):
         #Clear widgets on tabs except days selector
         for tab_name in [ "Treasury Balance", "Quaterly Balance", "Yearly Balance", "Expenses"]:
             for widget in self.tabview_summary.tab(tab_name).winfo_children():
                 if not (isinstance(widget, ctk.CTkFrame) and not any(isinstance(widget, t) for t in [ctk.CTkLabel, ctk.CTkOptionMenu])):
                     widget.destroy()
+        #To use the range of dates
+        daily_data = self.controller.get_next_days_balance(
+            self.days_period,
+            from_date=from_date.strftime('%Y-%m-%d') if from_date else None,
+            to_date=to_date.strftime('%Y-%m-%d') if to_date else None
+        )
 
-        self.create_days_chart()
+        self.create_days_chart(daily_data)
         self.create_quarter_chart()
         self.create_year_chart()
         self.create_expense_chart()
 
-    def create_days_chart(self):
+    def create_days_chart(self, daily_data=None):
         """Create the graph with selected days range"""
-        daily_data=self.controller.get_next_days_balance(self.days_period)
+        if daily_data is None:
+            daily_data = self.controller.get_next_days_balance(self.days_period)
 
         #Set the graph
         fig,ax=plt.subplots(figsize=(10,5))
