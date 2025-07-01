@@ -15,10 +15,11 @@ class SummaryView:
         self.frame = frame
         self.controller = TreasuryController()
 
+        self.days_period = 30
+
         # Frame to main selector
         self.selector_frame = ctk.CTkFrame(self.frame, fg_color="transparent")
         self.selector_frame.pack(fill="x", padx=10, pady=5)
-
 
         self.range_mode = ctk.StringVar(value="30")  # Default value
         ctk.CTkLabel(self.selector_frame, text="Range:").pack(side="left", padx=(0, 5))
@@ -32,7 +33,7 @@ class SummaryView:
         self.mode_selector.pack(side="left", padx=(0, 10))
 
         self.date_range_selector = DateRangeSelector(
-            self.frame,
+            self.selector_frame,
             callback=self.update_chart
         )
         self.date_range_selector.pack_forget()

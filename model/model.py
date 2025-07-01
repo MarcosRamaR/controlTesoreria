@@ -148,7 +148,7 @@ class TreasuryModel:
             today = datetime.now().date()
 
             # Set date range
-            if days > 0: 
+            if days > 0:
                 start_date = datetime.now().date()
                 end_date = start_date + timedelta(days=days)
             else:
