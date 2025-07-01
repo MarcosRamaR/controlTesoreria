@@ -35,8 +35,8 @@ class TreasuryController:
     def delete_data(self, invoice_date, payment_date,company,description,amount,type):
         return self.model.delete_data(invoice_date, payment_date,company,description,amount,type)
 
-    def get_next_days_balance(self, days=30, from_date=None, to_date=None):
-        return self.model.get_next_days(days, from_date, to_date)
+    def get_next_days_balance(self, days=None, from_date=None, to_date=None):
+        return self.model.get_next_days(days if days is not None else 0, from_date, to_date)
 
     def get_quarter_balance(self):
         return self.model.get_quarter()

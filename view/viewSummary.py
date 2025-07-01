@@ -14,13 +14,28 @@ class SummaryView:
     def __init__(self,frame):
         self.frame = frame
         self.controller = TreasuryController()
-        self.days_period = 30 #Default period for days balance
+
+        # Frame to main selector
+        self.selector_frame = ctk.CTkFrame(self.frame, fg_color="transparent")
+        self.selector_frame.pack(fill="x", padx=10, pady=5)
+
+
+        self.range_mode = ctk.StringVar(value="30")  # Default value
+        ctk.CTkLabel(self.selector_frame, text="Range:").pack(side="left", padx=(0, 5))
+
+        self.mode_selector = ctk.CTkOptionMenu(
+            self.selector_frame,
+            values=["30", "60", "90", "Custom"],
+            variable=self.range_mode,
+            command=self.on_range_mode_change
+        )
+        self.mode_selector.pack(side="left", padx=(0, 10))
 
         self.date_range_selector = DateRangeSelector(
             self.frame,
             callback=self.update_chart
         )
-        self.date_range_selector.pack(fill="x", padx=10, pady=5)
+        self.date_range_selector.pack_forget()
 
         #container for tabs
         self.tabview_summary = ctk.CTkTabview(self.frame)
@@ -69,11 +84,19 @@ class SummaryView:
                 if not (isinstance(widget, ctk.CTkFrame) and not any(isinstance(widget, t) for t in [ctk.CTkLabel, ctk.CTkOptionMenu])):
                     widget.destroy()
         #To use the range of dates
-        daily_data = self.controller.get_next_days_balance(
-            self.days_period,
-            from_date=from_date.strftime('%Y-%m-%d') if from_date else None,
-            to_date=to_date.strftime('%Y-%m-%d') if to_date else None
-        )
+
+        if self.range_mode.get() == "Custom" and from_date and to_date:
+            daily_data = self.controller.get_next_days_balance(
+                None,  # No usamos days_period en modo custom
+                from_date=from_date.strftime('%Y-%m-%d'),
+                to_date=to_date.strftime('%Y-%m-%d')
+            )
+        else:
+            daily_data = self.controller.get_next_days_balance(
+                self.days_period,
+                from_date=from_date.strftime('%Y-%m-%d') if from_date else None,
+                to_date=to_date.strftime('%Y-%m-%d') if to_date else None
+            )
 
         self.create_days_chart(daily_data)
         self.create_quarter_chart()
@@ -257,3 +280,12 @@ class SummaryView:
         canvas = FigureCanvasTkAgg(fig,master=self.tabview_summary.tab("Expenses"))
         canvas.draw()
         canvas.get_tk_widget().pack()
+
+    def on_range_mode_change(self, choice):
+        """To change visibility of date selector"""
+        if choice == "Custom":
+            self.date_range_selector.pack(side="left", fill="x", expand=True)
+        else:
+            self.date_range_selector.pack_forget()
+            self.days_period = int(choice)
+            self.update_chart()

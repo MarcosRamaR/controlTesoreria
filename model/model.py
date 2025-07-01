@@ -148,14 +148,12 @@ class TreasuryModel:
             today = datetime.now().date()
 
             # Set date range
-            if from_date is None and to_date is None:
-                #Set default
-                start_date = today
-                end_date = today + timedelta(days=days)
+            if days > 0: 
+                start_date = datetime.now().date()
+                end_date = start_date + timedelta(days=days)
             else:
-                #Custom dates
-                start_date = pd.to_datetime(from_date).date() if from_date else today
-                end_date = pd.to_datetime(to_date).date() if to_date else today + timedelta(days=days)
+                start_date = pd.to_datetime(from_date).date() if from_date else datetime.now().date()
+                end_date = pd.to_datetime(to_date).date() if to_date else datetime.now().date()
 
             date_range = pd.date_range(start=start_date, end=end_date, freq='D')
 

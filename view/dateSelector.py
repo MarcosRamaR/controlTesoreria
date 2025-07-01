@@ -13,6 +13,8 @@ class DateRangeSelector(ctk.CTkFrame):
         # Style configuration
         self.font = ctk.CTkFont(family="Arial", size=12)
         self.label_font = ctk.CTkFont(family="Arial", size=12, weight="bold")
+        self.configure(fg_color="transparent")  # Para que no destaque el fondo
+        self.apply_button.configure(width=100)
 
         self.create_widgets()
 
@@ -53,12 +55,12 @@ class DateRangeSelector(ctk.CTkFrame):
         self.to_date.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
 
         # Ok button
-        self.apply_btn = ctk.CTkButton(
+        self.apply_button = ctk.CTkButton(
             self,
             text="Apply",
             command=self.apply_filter
         )
-        self.apply_btn.grid(row=0, column=4, padx=10, pady=5)
+        self.apply_button.grid(row=0, column=4, padx=10, pady=5)
 
     def apply_filter(self):
         if self.callback:
