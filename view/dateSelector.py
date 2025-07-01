@@ -15,8 +15,13 @@ class DateRangeSelector(ctk.CTkFrame):
         self.label_font = ctk.CTkFont(family="Arial", size=12, weight="bold")
         self.configure(fg_color="transparent")  # Para que no destaque el fondo
 
-        self.create_widgets()
+        self.ctk_gray = "#2b2b2b"
+        self.ctk_dark_gray = "#1e1e1e"
+        self.ctk_blue = "#1f6aa5"
+        self.ctk_text = "white"
+        self.ctk_border = "#3e3e3e"
 
+        self.create_widgets()
         self.apply_button.configure(width=100)
 
     def create_widgets(self):
@@ -32,10 +37,33 @@ class DateRangeSelector(ctk.CTkFrame):
             self,
             font=self.font,
             date_pattern='yyyy-mm-dd',
-            background='#2b2b2b',
-            foreground='white',
-            headersbackground='#2b2b2b',
-            selectbackground='#004be0'
+            background=self.ctk_dark_gray, #general background color
+            foreground=self.ctk_text, #Main text color
+            #Heders
+            headersbackground=self.ctk_blue,
+            headersforeground=self.ctk_text,
+            #Selected day
+            selectbackground=self.ctk_blue,
+            selectforeground=self.ctk_text,
+            #Normal days of month
+            normalbackground=self.ctk_border,
+            normalforeground=self.ctk_text,
+            #Weekend days
+            weekendbackground=self.ctk_dark_gray,
+            weekendforeground=self.ctk_text,
+            #Other month days
+            othermonthbackground='#1e1e1e',
+            othermonthforeground='#555555',
+            bordercolor=self.ctk_border, #Calendar border
+            arrowcolor=self.ctk_text, #Navigation arrows
+            arrowstyle='modern',
+            relief='flat',
+            weekendrelief='flat',  # weekend days style
+            othermonthrelief='flat',  # other months days style
+            showweeknumbers=False, #show week number
+            firstweekday='monday', #first week day
+            highlightcolor=self.ctk_blue,
+            highlightthickness=1
         )
         self.from_date.grid(row=0, column=1, padx=5, pady=5, sticky="ew")
 
@@ -48,10 +76,33 @@ class DateRangeSelector(ctk.CTkFrame):
             self,
             font=self.font,
             date_pattern='yyyy-mm-dd',
-            background='#2b2b2b',
-            foreground='white',
-            headersbackground='#2b2b2b',
-            selectbackground='#004be0'
+            background=self.ctk_dark_gray,  # general background color
+            foreground=self.ctk_text,  # Main text color
+            # Heders
+            headersbackground=self.ctk_blue,
+            headersforeground=self.ctk_text,
+            # Selected day
+            selectbackground=self.ctk_blue,
+            selectforeground=self.ctk_text,
+            # Normal days of month
+            normalbackground=self.ctk_border,
+            normalforeground=self.ctk_text,
+            # Weekend days
+            weekendbackground=self.ctk_dark_gray,
+            weekendforeground=self.ctk_text,
+            # Other month days
+            othermonthbackground='#1e1e1e',
+            othermonthforeground='#555555',
+            bordercolor=self.ctk_border,  # Calendar border
+            arrowcolor=self.ctk_text,  # Navigation arrows
+            arrowstyle='modern',
+            relief='flat',
+            weekendrelief='flat',  # weekend days style
+            othermonthrelief='flat',  # other months days style
+            showweeknumbers=False,  # show week number
+            firstweekday='monday',  # first week day
+            highlightcolor=self.ctk_blue,
+            highlightthickness=1
         )
         self.to_date.grid(row=0, column=3, padx=5, pady=5, sticky="ew")
 
